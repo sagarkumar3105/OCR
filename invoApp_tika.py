@@ -253,6 +253,8 @@ def admin():
     
     if session:
         st.markdown("**Session Authenticated**")
+         if not os.path.isfile("/Ledgers/"):
+            os.mkdir("Ledgers")
         led=[i.split(".")[0] for i in os.listdir("Ledgers/")]
 
         st.info("Total Number of Available Ledgers/Vendors: "+str(len(led)))
