@@ -4,7 +4,6 @@ import tika
 from tika import parser
 import pandas as pd
 import numpy as np
-import cv2
 import re
 import pandas as pd
 # import fitz
