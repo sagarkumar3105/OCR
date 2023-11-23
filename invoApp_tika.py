@@ -6,11 +6,11 @@ import pandas as pd
 import numpy as np
 import re
 import pandas as pd
-# import fitz
-# import json
+import json
+from pandas.io.json import json_normalize
 import os
 
-os.environ['PATH']+=":/Tesseract-OCR"
+#os.environ['PATH']=f'''os.environ.get("PATH","")"C:\\Users\\Sagar Kumar\\Documents\\NYL Technology\\OCR Envo\\Tesseract-OCR"'''
 
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
@@ -160,7 +160,7 @@ def kpkTemplate(dataList):
     ledgerData={"PRO Num":pronum,"Date":invoiceDate,"PO Num":ponum,"Total":total,"GST @18%":gst,"Net Amount":net}
     masterData={"KPK_SCIENTIFIC_SUPPLIES":{'Date':invoiceDate,'Invoice Number':ponum,'Description of Goods':prodList,'HSN/SAC':["" for _ in range(len(prodList))],'Quantity':qtyList,'Rate':rateList,'per':unitList,'Amount':amtList}}
 
-    writeToDb("KPKScientificSupplies",ledgerData,masterData)
+    writeToDb("KPKScientificSupplies_002",ledgerData,masterData)
 
 
 
@@ -179,10 +179,11 @@ def user():
                 doc=''
                 try:
                     doc=parser.from_file(f) # Reading the PDF File
+                    print("!!!!!!")
                 except:
                     st.error("File Rendering failed Contact Developer")
                 res=doc['content']
-                st.write(res)
+                
                 dataList=res.split("\n")
                 #imProcess(f)#"jainchem.pdf")#r"../Main Demo/invo.png")
                 dataList=[i.strip() for i in dataList if len(i.strip())>0] # Removing all empty lines and removing trailing spaces
@@ -224,8 +225,23 @@ def admin():
         #getvName(led)
         collection=db["MasterData"]
         cursor=collection.find()
-        MasterDf=pd.DataFrame(list(cursor))
-        st.table(MasterDf)
+        list_cur = list(cursor)
+        #mess=pd.DataFrame()
+        #for i in range(len(list_cur)):
+        df = json_normalize(list_cur).drop("_id",axis=1)#[i]#)#.astype({"_id": str})
+        st.write(df)
+        # for series_name,series in df.items():
+        #     print(series)
+
+
+        #df.columns = df.columns.str.replace('.', '_')
+        #st.table(df)
+
+            
+
+
+        # json_data = dumps(list_cur, indent = 2)  
+        # st.write(json_data)
         # df=pd.read_csv("MasterData.csv")
         # res=pd.DataFrame(columns=df.columns.tolist())
         # #show=st.button('show')
