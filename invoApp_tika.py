@@ -7,7 +7,6 @@ import numpy as np
 import re
 import pandas as pd
 import json
-from pandas.io.json import json_normalize
 import os
 
 #os.environ['PATH']=f'''os.environ.get("PATH","")"C:\\Users\\Sagar Kumar\\Documents\\NYL Technology\\OCR Envo\\Tesseract-OCR"'''
@@ -226,10 +225,11 @@ def admin():
         collection=db["MasterData"]
         cursor=collection.find()
         list_cur = list(cursor)
+        st.write(list_cur)
         #mess=pd.DataFrame()
         #for i in range(len(list_cur)):
-        df = json_normalize(list_cur).drop("_id",axis=1)#[i]#)#.astype({"_id": str})
-        st.write(df)
+        # df = json_normalize(list_cur).drop("_id",axis=1)#[i]#)#.astype({"_id": str})
+        # st.write(df)
         # for series_name,series in df.items():
         #     print(series)
 
