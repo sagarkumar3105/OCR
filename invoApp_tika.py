@@ -11,6 +11,7 @@ import pandas as pd
 # import json
 import os
 
+st.title(os.environ['PATH'])
 
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
