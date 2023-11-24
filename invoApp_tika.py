@@ -213,19 +213,30 @@ def admin():
         global db
         st.markdown("**Session Authenticated**")
         listOfAllLedgers=db.list_collection_names()
-        print(listOfAllLedgers)
-        if len(listOfAllLedgers)>=0:
-            numOfLedgers=len(listOfAllLedgers)-1
-        else:
-            numOfLedgers=0
+        listOfAllLedgers.remove("MasterData")
+        numOfLedgers=len(listOfAllLedgers)
         st.info("Total Number of Available Ledgers/Vendors: "+str(numOfLedgers))
 
         vName=st.multiselect("Select the vendor Name",listOfAllLedgers)
-        #getvName(led)
-        collection=db["MasterData"]
-        cursor=collection.find()
-        list_cur = list(cursor)
-        st.write(list_cur)
+        
+        col1,col2=st.columns(2)
+        viewButton=None
+        
+        with col1:
+            viewButton=st.button("View Ledger")
+        with col2:
+            eraseButton=st.button("Erase All")
+            if eraseButton:
+                for name in listOfAllLedgers:
+                    db[name].drop()
+        list_cur=[]
+        for name in vName:
+            collection=db[name]
+            cursor=collection.find()
+            list_cur.append(list(cursor))
+        
+        if viewButton:
+            st.write(list_cur)
         #mess=pd.DataFrame()
         #for i in range(len(list_cur)):
         # df = json_normalize(list_cur).drop("_id",axis=1)#[i]#)#.astype({"_id": str})
